@@ -1,0 +1,3 @@
+SELECT TRUNC(MONTHS_BETWEEN(SYSDATE,hiredate))
+FROM employees
+/
