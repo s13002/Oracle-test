@@ -1,4 +1,3 @@
-SELECT empno,ename,yomi
+ELECT INITCAP(yomi) || '@std.it-college.ac.jp'
 FROM employees
-WHERE UPPER(yomi)='TAKAHASHI'
 /
