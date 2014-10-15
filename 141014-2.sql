@@ -1,3 +1,3 @@
-ELECT INITCAP(yomi) || '@std.it-college.ac.jp'
+SELECT INITCAP(yomi) || '@std.it-college.ac.jp'
 FROM employees
 /
