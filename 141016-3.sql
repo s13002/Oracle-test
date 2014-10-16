@@ -1,3 +1,7 @@
+alter session set nls_date_format = 'DD-MON-RR';
+/
+alter session set nls_date_language = 'AMERICAN';
+/
 SELECT ename, hiredate, TO_CHAR(hiredate,'DDTH "of" Month')
 FROM employees
 /
