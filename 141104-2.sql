@@ -1,5 +1,5 @@
 INSERT INTO departments(deptno, dname, loc)
-VALUES (60,'経理',NULL)
+VALUES (60,'経理','NULL')
 /
 SELECT * FROM departments
 /
