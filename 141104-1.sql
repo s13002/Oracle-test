@@ -8,4 +8,3 @@ WHERE deptno = 50
 /
 SELECT * FROM departments
 /
-
