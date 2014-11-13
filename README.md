@@ -274,3 +274,80 @@ deptnoがnullのデータについて、deptno「10」を設定し、正しく�
 		1. select文で、上記のdeptno「70」、「80」の両方の追加が正常に行われていることを確認
 		1. セーブポイントまで、取消処理
 		1. select文で、deptno「70」のみ追加されていること(deptno「80」の追加が取り消されていること)
+
+1. 2014/11/11
+
+	1. 以下の操作を行うスクリプト(141111-1.sql)
+		1. dept1表の作成
+			1. deptno, number(4), 主キー制約, 制約名：dept1_deptno_pk
+			1. dname varchar2(10), not null制約
+			1. loc, varchar2(10)
+		1. 重複するdeptnoのデータを追加し、一意制約違反が発生すること
+		1. dnameがnullのデータを追加し、NULLは追加できない旨の制約違反が発生すること
+		1. dept1表の削除
+	1. 以下の操作を行うスクリプト(141111-2.sql)
+		1. emp1表の作成
+			1. empno, number(4), 主キー制約, 制約名：emp1_empno_pk
+			1. ename, varchar2(10), not null制約, 制約名：emp1_ename_nn
+			1. deptno, number(4), departments(deptno)への外部キー（参照整合性）制約, 制約名：emp1_dept1_deptno_fk
+		1. 重複するempnoのデータを追加し、一意制約違反が発生すること
+		1. enameがnullのデータを追加し、nullは追加できない旨の制約違反が発生すること
+		1. deptnoにdepartments表のdeptnoに存在しないデータを追加し、参照整合性制約違反が発生すること
+		1. emp1表の削除
+		
+1. 2014/11/12
+
+	1. 以下の操作を行うスクリプト(141112-1.sql)
+		1. v_emp_deptビューの作成。employees表とdepartments表を結合し、deptnoが「10」のempno, ename, dnameを表示する
+		1. 上記ビューを使用し、select文を実行
+		1. 上記ビューを削除。
+	1. (前提)以下を実行し、emp2表を作成<br />
+create table emp2(empno primary key, ename not null, sal, deptno)<br />
+as select empno, ename, sal, deptno from employees;<br />
+以下の操作を行うスクリプト(141112-2.sql)
+		1. emp2表のempno, ename, sal, deptnoを表示するためのv_empビューの作成、作成したビューを使用し、empno, ename, sal, deptnoを表示する
+		1. 上記ビューを使用し、empnoが「1014」のデータを削除
+		1. 上記ビューを使用し、empnoが「1013」のsalを「300000」に変更 
+		1. 上記ビューを使用し、empno「1030」、ename「山口」、sal「200000」、deptno「null」のデータを追加
+		1. emp2を確認し、上記の削除／変更／追加が正常に行われていること確認
+		1. rollbackする
+		1. 上記ビューの削除
+
+1. 2014/11/13
+
+	1. 以下の操作を行うスクリプト(141113-1.sql)
+		1. s_ord順序の作成
+		1. select文を実行し、s_ord順序が正しく動作していることを確認
+		1. s_ord順序の増分値を10に変更
+		1. select文を実行し、s_ord順序が正しく動作していることを確認
+		1. s_ord順序を削除
+	1. 以下の操作を行うスクリプト(141113-2.sql)
+		1. departments表に対して、dept_sシノニムを作成
+		1. select文を実行し、dept_sシノニムが正しく動作していることを確認
+		1. dept_sシノニムを削除
+	1. (前提)以下を実行し、emp3表を作成<br />
+create table emp3(empno primary key, ename not null, sal, deptno)<br />
+as select empno, ename, sal, deptno from employees;<br />
+以下の操作を行うスクリプト(141113-3.sql)
+		1. emp3表のename列に対して、idx_emp3_ename索引を作成
+		1. 以下を実行し、idx_emp3_ename索引が作成されていること確認<br />
+select table_name, column_name, index_name, index_type<br />
+from user_indexes natural join user_ind_columns<br />
+where table_name = 'EMP3';
+		1. idx_emp3_ename索引を削除
+			
+1. 2014/11/18
+
+	1. Sample.javaを各自のアカウントに変更して、動作確認
+	1. 以下の処理を行うJavaクラス（クラス名：Select1.class)を作成
+		1. 社員番号を入力させる(標準入力)
+		1. employees表（自己結合）とdepartments表を結合
+		1. 以下を一覧表示する
+			1. empno(番号)
+			1. ename(名前)
+			1. job(職種)
+			1. ename(上司)
+			1. dname(部署)
+			1. loc(場所)
+	1. 上記のJavaクラスのデータベースへの問い合わせを以下通り変更したクラスを作成（クラス名：Select2.class)<br />
+executeQuery => prepareStatement  
