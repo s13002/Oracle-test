@@ -1,4 +1,4 @@
-REATE INDEX idx_emp3_ename
+CREATE INDEX idx_emp3_ename
 ON emp3(ename)
 /
 select table_name, column_name, index_name, index_type
