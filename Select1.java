@@ -22,7 +22,8 @@ public class Select1{
         Statement st = null;
         ResultSet rs = null;
         PreparedStatement prepare = null;
-        boolean empIsExists = false;
+        boolean employeesExists = false;
+	boolean subordinateIsExists = false;
 
         try {
             Class.forName("oracle.jdbc.driver.OracleDriver");
@@ -53,7 +54,7 @@ public class Select1{
             }
 
             System.out.print("番号: ");
-            int empno = new Scanner(System.in).nextInt();
+            int empNo = new Scanner(System.in).nextInt();
 
             sql = "SELECT emp.empno, emp.ename, emp.job, mgr.ename, dept.dname, dept.loc," +
                     "emp.sal, grd.grade\n" +
@@ -67,11 +68,11 @@ public class Select1{
                     "ORDER BY emp.empno";
 
             prepare = conn.prepareStatement(sql);
-            prepare.setInt(1, empno);
+            prepare.setInt(1, empNo);
             rs = prepare.executeQuery();
 
             while (rs.next()) {
-                empIsExists = true;
+                employeesExists = true;
                 int emp_no = rs.getInt(1);
                 String ename = rs.getString(2);
                 String job = rs.getString(3);
@@ -82,12 +83,49 @@ public class Select1{
                 String sal_grade = rs.getString(8);
 
                 System.out.printf("社員番号： %s\t社員名： %s\t職種： %s\t上司： %s\t部署名： %s\t場所： %s" +
-                                "\t給与： %s\t等級： %s\n",
+                                "\t給与： %s\t給与の等級： %s\n",
                         emp_no, ename, job, mgr_name, dname, loc, sal, sal_grade);
             }
 
-            if (!empIsExists) {
-                System.out.println("レコードがありません。");
+            if (employeesExists) {
+                System.out.println("部下");
+	    }else{
+		System.out.println("レコード無し。");
+            }
+
+            sql = "SELECT emp.empno, emp.ename, emp.job, dept.dname, dept.loc," +
+                    "emp.sal, grd.grade\n" +
+                    "FROM employees emp\n" +
+                    "LEFT JOIN departments dept\n" +
+                    "ON (emp.deptno = dept.deptno)\n" +
+                    "LEFT JOIN salgrades grd \n" +
+                    "ON emp.sal BETWEEN grd.losal AND grd.hisal\n" +
+                    "WHERE emp.mgr = ?\n" +
+                    "ORDER BY emp.empno";
+
+            prepare = conn.prepareStatement(sql);
+            prepare.setInt(1, empNo);
+            rs = prepare.executeQuery();
+
+
+            while (rs.next()) {
+                subordinateIsExists = true;
+                int emp_no = rs.getInt(1);
+                String ename = rs.getString(2);
+                String job = rs.getString(3);
+                String dname = rs.getString(4);
+                String loc = rs.getString(5);
+                int sal = rs.getInt(6);
+                String sal_grade = rs.getString(7);
+
+                System.out.printf("社員番号： %s\t社員名： %s\t職種： %s\t部署名： %s\t場所： %s" +
+                                "\t給与： %s\t等級： %s\n",
+                        emp_no, ename, job, dname, loc, sal, sal_grade);
+            }
+
+            if (employeesExists && !subordinateIsExists) {
+                System.out.println("部下はいません。");
+
             }
 
         } catch (ClassNotFoundException e) {
