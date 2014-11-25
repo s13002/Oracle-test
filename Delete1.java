@@ -33,7 +33,7 @@ public class Delete1 {
             System.out.print("番号: ");
             int empNo = new Scanner(System.in).nextInt();
 
-            sql = "SELECT empno, ename FROM emp_copy WHERE empno = ?";
+            sql = "SELECT empno, ename FROM employees WHERE empno = ?";
 
             prepare = conn.prepareStatement(sql);
             prepare.setInt(1, empNo);
@@ -55,7 +55,7 @@ public class Delete1 {
                 System.out.println("レコード無し。");
             }
 
-            sql = "SELECT ename FROM emp_copy WHERE mgr = ?";
+            sql = "SELECT ename FROM employees WHERE mgr = ?";
 
             prepare = conn.prepareStatement(sql);
             prepare.setInt(1, empNo);
@@ -81,7 +81,7 @@ public class Delete1 {
                     if (subordinateIsExists) {
                         System.out.println("部下が存在する為、削除できませんでした。");
                     } else {
-                        sql = "DELETE FROM emp_copy WHERE empno = ?";
+                        sql = "DELETE FROM employees WHERE empno = ?";
                         prepare = conn.prepareStatement(sql);
                         prepare.setInt(1, empNo);
                         prepare.executeQuery();
